@@ -80,7 +80,7 @@ endif()
 
 # Switch on, if you use c11-specific commands
 if(NOT WIN32)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-format-overflow -fno-var-tracking-assignments")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dfinite=isfinite")
 endif()
 
 # Option SICK_TARGET_ENDIANESS sets the endianess of the cmake target to build sick_scan_xd (default is little endian).
@@ -662,7 +662,7 @@ else() # i.e. (ROS_VERSION EQUAL 0 OR ROS_VERSION EQUAL 2)
     add_executable(sick_generic_caller driver/src/sick_generic_caller.cpp)
     if(ROS_VERSION EQUAL 0 AND NOT WIN32)
         target_link_libraries(sick_generic_caller ${PROJECT_NAME}_lib ${SICK_LDMRS_LIBRARIES} "pthread") # pthread required for std::thread
-        target_link_options(sick_generic_caller PUBLIC "LINKER:--no-as-needed") # fixes exception "Enable multithreading to use std::thread: Operation not permitted" 
+        # target_link_options(sick_generic_caller PUBLIC "LINKER:--no-as-needed") # fixes exception "Enable multithreading to use std::thread: Operation not permitted" 
     else()    
         target_link_libraries(sick_generic_caller ${PROJECT_NAME}_lib ${SICK_LDMRS_LIBRARIES})
     endif()
@@ -759,7 +759,7 @@ if(BUILD_SICK_SCAN_XD_API_TEST EQUAL 1)
         target_link_libraries(sick_scan_xd_api_test "dl") # link with dl for dynamic library loading
         if(ROS_VERSION EQUAL 0)
             target_link_libraries(sick_scan_xd_api_test "pthread") # pthread required for std::thread
-            target_link_options(sick_scan_xd_api_test PUBLIC "LINKER:--no-as-needed") # fixes exception "Enable multithreading to use std::thread: Operation not permitted" 
+            # target_link_options(sick_scan_xd_api_test PUBLIC "LINKER:--no-as-needed") # fixes exception "Enable multithreading to use std::thread: Operation not permitted" 
         elseif(ROS_VERSION EQUAL 1)
             target_link_libraries(sick_scan_xd_api_test ${catkin_LIBRARIES})
             add_dependencies(sick_scan_xd_api_test ${PROJECT_NAME}_gencfg ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
